@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { User, getConfig } from 'radiks';
+import Router from 'next/router';
+import { Container, Segment, Header, Button } from 'semantic-ui-react';
 
 class Home extends Component {
     state = {
-        currentUser: null
+        loading: false
     }
 
     async componentDidMount() {
         const { userSession } = getConfig();
         if (userSession.isUserSignedIn()) {
-            const currentUser = userSession.loadUserData();
+            this.setState({ loading: true });
             await User.createWithCurrentUser();
-            this.setState({ currentUser });
+            Router.push('/files/');
         } else if (userSession.isSignInPending()) {
-            const currentUser = await userSession.handlePendingSignIn();
+            this.setState({ loading: true });
             await User.createWithCurrentUser();
-            this.setState({ currentUser });
+            Router.push('/files/');
         }
     }
 
@@ -24,30 +26,14 @@ class Home extends Component {
         userSession.redirectToSignIn();
     }
 
-    logout = () => {
-        const { userSession } = getConfig();
-        userSession.signUserOut();
-        this.setState({
-            currentUser: null,
-        });
-    }
-
     render() {
-        const { currentUser } = this.state;
         return (
-            <div>
-                {currentUser ? (
-                    <>
-                        <p>Logged in as: {currentUser.username}</p>
-                        <button onClick={this.logout}>Logout</button>
-                    </>
-                ) : (
-                        <>
-                            <p>Login with Blockstack to get started</p>
-                            <button onClick={this.login}>Log In</button>
-                        </>
-                    )}
-            </div>
+            <Container textAlign="center">
+                <Segment placeholder padded loading={this.state.loading}>
+                    <Header>Login with Blockstack to get started</Header>
+                    <Button primary onClick={this.login}>Login</Button>
+                </Segment>
+            </Container>
         )
     }
 }

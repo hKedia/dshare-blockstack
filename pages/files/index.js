@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
-export default class ListFiles extends Component {
+export default class Index extends Component {
     render() {
         return (
             <div>
-                <h1>Upload a file</h1>
-
+                <p>List of Files</p>
             </div>
         )
     }
