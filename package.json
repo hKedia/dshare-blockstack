@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "blockstack": "^19.1.0",
+    "blockstack-large-storage": "^0.0.6",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
@@ -18,6 +19,6 @@
     "radiks-server": "^0.1.11",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "styled-components": "^4.2.0"
+    "semantic-ui-react": "^0.86.0"
   }
 }

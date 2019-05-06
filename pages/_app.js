@@ -1,6 +1,5 @@
 import App, { Container } from 'next/app';
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
 import { UserSession, AppConfig } from 'blockstack';
 import { configure } from 'radiks';
 
@@ -39,9 +38,7 @@ class MyApp extends App {
 
     return (
       <Container>
-        <ThemeProvider theme={{}}>
-          <Component {...pageProps} serverCookies={this.props.cookies} />
-        </ThemeProvider>
+        <Component {...pageProps} serverCookies={this.props.cookies} />
       </Container>
     );
   }
