@@ -13,11 +13,11 @@ class Home extends Component {
         if (userSession.isUserSignedIn()) {
             this.setState({ loading: true });
             await User.createWithCurrentUser();
-            Router.push('/files/');
+            Router.push('/files');
         } else if (userSession.isSignInPending()) {
             this.setState({ loading: true });
             await User.createWithCurrentUser();
-            Router.push('/files/');
+            Router.push('/files');
         }
     }
 

@@ -4,7 +4,11 @@ export default class File extends Model {
     static className = 'File';
     static schema = {
         name: String,
-        gaiaUrl: String,
-        key: String
+        path: String,
+        key: String,
+        uploadedBy: {
+            type: String,
+            decrypted: true
+        }
     }
 }
