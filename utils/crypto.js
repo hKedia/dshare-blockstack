@@ -1,5 +1,5 @@
 /**
- * Generated a symmetric key and encrypts the file
+ * Generate a symmetric key and encrypt the file
  * @param {ArrayBuffer} data The file to be encrypted
  * @returns {object} The object with the encrypted data, the random value and the key
  */
@@ -25,7 +25,7 @@ export async function encrypt(data) {
 }
 
 /**
- * Decrypts the file
+ * Decrypt the file
  * @param {ArrayBuffer} data The file to be decrypted
  * @param {JsonWebKey} key The decryption key
  * @param {number} iv The random value used to encrypt the file

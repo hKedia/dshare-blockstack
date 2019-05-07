@@ -1,4 +1,5 @@
 import { Model } from 'radiks';
+import moment from 'moment';
 
 export default class File extends Model {
     static className = 'File';
@@ -10,5 +11,9 @@ export default class File extends Model {
             type: String,
             decrypted: true
         }
+    }
+
+    ago() {
+        return moment(this.attrs.createdAt).fromNow();
     }
 }
