@@ -98,8 +98,8 @@ export default class FileDetail extends Component {
             </Table.Row>
 
             <Table.Row>
-              <Table.Cell>Last Updated At</Table.Cell>
-              <Table.Cell textAlign="right">{file.attrs.updatedAt}</Table.Cell>
+              <Table.Cell>Last Updated</Table.Cell>
+              <Table.Cell textAlign="right">{file.ago()}</Table.Cell>
             </Table.Row>
           </Table.Body>
         </Table>

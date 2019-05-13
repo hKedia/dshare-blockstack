@@ -8,17 +8,22 @@ export default class RenderFiles extends Component {
       const { name, _id } = file.attrs;
       return {
         header: name,
-        description: (
-          <Link href={{
-            pathname: "/files/view",
-            query: {
-              id: _id
-            }
-          }}>
-            <a>View File</a>
-          </Link>
-        ),
+        description: {
+          content: (
+            <Link href={{
+              pathname: "/files/view",
+              query: {
+                id: _id
+              }
+            }}>
+              <a>View File</a>
+            </Link>
+          ),
+          textAlign: 'right'
+        },
+        meta: file.ago(),
         fluid: true,
+        color: 'teal',
         key: _id
       };
     });
