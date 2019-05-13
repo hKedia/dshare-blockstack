@@ -1,23 +1,37 @@
 import React, { Component } from 'react';
 import { Menu, Container } from 'semantic-ui-react';
 import Link from 'next/link';
+import Router from 'next/router';
+import { getConfig } from 'radiks';
 
 export default class Header extends Component {
-    render() {
-        return (
-            <Menu fixed="top">
-                <Container>
-                    <Link href="/files">
-                        <a className="item">Home</a>
-                    </Link>
+  logout = () => {
+    const { userSession } = getConfig();
+    userSession.signUserOut();
+    Router.push('/');
+  }
 
-                    <Menu.Menu position="right">
-                        <Link href="/files/upload">
-                            <a className="item">Upload Files</a>
-                        </Link>
-                    </Menu.Menu>
-                </Container>
-            </Menu>
-        )
-    }
+  render() {
+    return (
+      <Menu fixed="top">
+        <Container>
+          <Link href="/files">
+            <a className="item">Home</a>
+          </Link>
+
+          <Link href="/files/upload">
+            <a className="item">Upload Files</a>
+          </Link>
+
+          <Menu.Item
+            onClick={this.logout}
+            position="right"
+            color={'red'}
+            content="Logout"
+            link
+          ></Menu.Item>
+        </Container>
+      </Menu>
+    )
+  }
 }

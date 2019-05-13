@@ -1,37 +1,55 @@
 import React, { Component } from 'react';
 import Layout from '../../components/Layout';
 import File from '../../models/File';
-import { Grid } from 'semantic-ui-react';
-import FilesList from '../../components/FilesList';
+import { Grid, Loader } from 'semantic-ui-react';
+import RenderUploadedFiles from '../../components/RenderUploadedFiles';
+import NoFilesFound from '../../components/NoFilesFound';
 
 export default class Index extends Component {
-    state = {
-        files: []
+  state = {
+    uploadedFiles: [],
+    recipientFiles: [],
+    loadingFiles: true
+  }
+
+  async componentDidMount() {
+    const uploadedFiles = await File.fetchOwnList();
+    this.setState({
+      uploadedFiles: uploadedFiles,
+      loadingFiles: false
+    });
+  }
+  render() {
+    let uploadedFiles, recipientFiles;
+
+    if (this.state.uploadedFiles.length === 0) {
+      uploadedFiles = <NoFilesFound />;
+    } else {
+      uploadedFiles = <RenderUploadedFiles files={this.state.uploadedFiles} />
     }
 
-    async componentDidMount() {
-        const files = await File.fetchOwnList();
-        console.log(files);
-        this.setState({ files });
+    if (this.state.recipientFiles.length === 0) {
+      recipientFiles = <NoFilesFound />
+    } else {
+      recipientFiles = <RenderSharedFiles files={this.state.recipientFiles} />
     }
-    render() {
-        let filesList;
-        if (this.state.files.length === 0) {
-            filesList = <p>No Files Found</p>;
-        } else {
-            filesList = <FilesList files={this.state.files} />
-        }
-        return (
-            <Layout>
-                <Grid celled container>
-                    <Grid.Row>
-                        <Grid.Column width={10} as="h4">File Name</Grid.Column>
-                        <Grid.Column width={3} as="h4">Uploaded</Grid.Column>
-                        <Grid.Column width={3} as="h4">Actions</Grid.Column>
-                    </Grid.Row>
-                    {filesList}
-                </Grid>
-            </Layout>
-        )
-    }
+    return (
+      <Layout>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <h3>Files Uploaded by me</h3>
+              {uploadedFiles}
+              <Loader active={this.state.loadingFiles} inline="centered" />
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <h3>Files Shared with me</h3>
+              {recipientFiles}
+              <Loader active={this.state.loadingFiles} inline="centered" />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Layout>
+    )
+  }
 }
