@@ -1,38 +1,38 @@
 import React, { Component } from 'react';
 import Layout from '../../components/Layout';
-import File from '../../models/File';
+import Item from '../../models/Item';
 import { Grid, Loader } from 'semantic-ui-react';
 import RenderUploadedFiles from '../../components/RenderUploadedFiles';
 import NoFilesFound from '../../components/NoFilesFound';
-
 export default class Index extends Component {
   state = {
-    uploadedFiles: [],
-    recipientFiles: [],
     loadingFiles: true
   }
 
+  static async getInitialProps() {
+    const uploadedFiles = await Item.fetchOwnList();
+    const recipientFiles = [];
+    return { uploadedFiles, recipientFiles };
+  }
+
   async componentDidMount() {
-    const uploadedFiles = await File.fetchOwnList();
-    console.log('uploadedFiles', uploadedFiles);
     this.setState({
-      uploadedFiles: uploadedFiles,
       loadingFiles: false
     });
   }
   render() {
-    let uploadedFiles, recipientFiles;
+    let { uploadedFiles, recipientFiles } = this.props;
 
-    if (this.state.uploadedFiles.length === 0) {
+    if (uploadedFiles.length === 0) {
       uploadedFiles = <NoFilesFound />;
     } else {
-      uploadedFiles = <RenderUploadedFiles files={this.state.uploadedFiles} />
+      uploadedFiles = <RenderUploadedFiles files={uploadedFiles} />
     }
 
-    if (this.state.recipientFiles.length === 0) {
+    if (recipientFiles.length === 0) {
       recipientFiles = <NoFilesFound />
     } else {
-      recipientFiles = <RenderSharedFiles files={this.state.recipientFiles} />
+      recipientFiles = <RenderSharedFiles files={recipientFiles} />
     }
     return (
       <Layout>

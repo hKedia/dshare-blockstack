@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { User, getConfig, GroupMembership } from 'radiks';
+import { User, getConfig } from 'radiks';
 import Router from 'next/router';
 import { Container, Segment, Header, Button } from 'semantic-ui-react';
+import { getPublicKeyFromPrivate } from 'blockstack';
 
 class Home extends Component {
   state = {
@@ -12,20 +13,29 @@ class Home extends Component {
     const { userSession } = getConfig();
     if (userSession.isUserSignedIn()) {
       this.setState({ loading: true });
-      const user = await User.createWithCurrentUser();
-      await GroupMembership.cacheKeys();
-      await user.save();
-      console.log(user);
+      const user = userSession.loadUserData();
+      await this.savePublicKey(user, userSession);
       Router.push('/files');
     } else if (userSession.isSignInPending()) {
       this.setState({ loading: true });
-      await userSession.handlePendingSignIn();
-      const user = await User.createWithCurrentUser();
-      await GroupMembership.cacheKeys();
-      await user.save();
-      console.log(user);
+      const user = await userSession.handlePendingSignIn();
+      await User.createWithCurrentUser();
+      await this.savePublicKey(user, userSession)
       Router.push('/files');
     }
+  }
+
+  async savePublicKey(user, userSession) {
+    userSession.getFile(`keys/${user.username}`, { decrypt: false }).then(async (data) => {
+      if (data === null) {
+        const publicKey = getPublicKeyFromPrivate(user.appPrivateKey);
+        await userSession.putFile(`keys/${user.username}`, JSON.stringify(publicKey), { encrypt: false });
+        console.log('new user saved');
+      } else {
+        console.log(user);
+        console.log('user exists. redirecting...')
+      }
+    })
   }
 
   login = () => {

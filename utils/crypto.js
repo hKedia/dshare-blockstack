@@ -4,7 +4,7 @@
  * @returns {object} The object with the encrypted data, the random value and the key
  */
 
-export async function encrypt(data) {
+export async function encryptItem(data) {
   const key = await window.crypto.subtle.generateKey(
     { name: "AES-GCM", length: 256 },
     true,
@@ -32,7 +32,7 @@ export async function encrypt(data) {
  * @returns {ArrayBuffer} The decrypted file
  */
 
-export async function decrypt(data, key, iv) {
+export async function decryptItem(data, key, iv) {
   return await window.crypto.subtle.decrypt(
     { name: "AES-GCM", iv: iv },
     key,

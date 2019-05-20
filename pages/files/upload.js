@@ -1,29 +1,32 @@
 import React, { Component } from 'react';
 import { Segment, Header, Button, Form, Input } from 'semantic-ui-react';
-import { User, getConfig } from 'radiks';
+import { getConfig } from 'radiks';
 import Router from 'next/router';
 
 import Layout from '../../components/Layout';
-import { encrypt } from '../../utils/crypto';
-import FileModel from '../../models/File';
-import FileManager from '../../models/FileManager';
+import { encryptItem } from '../../utils/crypto';
+import Item from '../../models/Item';
 
 const shortid = require('shortid');
 
 export default class Upload extends Component {
     state = {
         buffer: null,
-        userSession: null,
         fileName: null,
-        currentUser: null,
-        loading: false
+        loading: false,
+        publicKey: null,
+        userSession: null,
+        username: null
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { userSession } = getConfig();
+        const user = userSession.loadUserData();
+        const publicKey = await userSession.getFile(`keys/${user.username}`, { decrypt: false });
         this.setState({
-            userSession: userSession,
-            currentUser: User.currentUser()
+            publicKey,
+            userSession,
+            username: user.username
         });
     }
 
@@ -49,10 +52,10 @@ export default class Upload extends Component {
 
         this.setState({ loading: true });
 
-        const { userSession, buffer, fileName, currentUser } = this.state;
+        const { buffer, fileName, publicKey, userSession, username } = this.state;
 
         // encrypt the file
-        const { data, iv, key } = await encrypt(buffer);
+        const { data, iv, key } = await encryptItem(buffer);
         const dataArray = new Uint8Array(data);
 
         // combine the data and random value
@@ -60,6 +63,11 @@ export default class Upload extends Component {
 
         // encryption key in JSON
         const keyData = await window.crypto.subtle.exportKey("jwk", key);
+        console.log('keyData', keyData);
+
+        // encryption key encrypted with user public key
+        const encryptedKey = await userSession.encryptContent(JSON.stringify(keyData), { publicKey: publicKey });
+        console.log('encryptedKey', encryptedKey);
 
         // generating a random identifier for file path
         const identifier = shortid.generate();
@@ -76,11 +84,10 @@ export default class Upload extends Component {
         }
 
         // Creating a new file model
-        const file = new FileModel({
+        const file = new Item({
             name: fileName,
             path: path,
-            key: JSON.stringify(keyData),
-            uploadedBy: currentUser._id
+            [username]: encryptedKey
         })
 
         // Saving the newly created file model to radiks

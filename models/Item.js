@@ -1,20 +1,18 @@
 import { Model } from 'radiks';
 import moment from 'moment';
 
-export default class File extends Model {
-    static className = 'File';
+export default class Item extends Model {
+    static className = 'Item';
     static schema = {
-        name: String,
-        path: String,
-        key: String,
-        uploadedBy: {
+        name: {
             type: String,
             decrypted: true
         },
-        userGroupId: {
+        path: {
             type: String,
             decrypted: true
         }
+
     }
 
     ago() {

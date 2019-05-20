@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Layout from './Layout';
-import File from '../models/File';
+import Item from '../models/Item';
 import { Table, Loader, Button } from 'semantic-ui-react';
 import { getConfig } from 'radiks';
-import { decrypt } from '../utils/crypto';
+import { decryptItem } from '../utils/crypto';
 import { download } from '../utils/file-utils';
 
 export default class FileDetail extends Component {
@@ -11,16 +11,19 @@ export default class FileDetail extends Component {
     file: null,
     userSession: null,
     loadingFiles: true,
-    downloading: false
+    downloading: false,
+    username: null
   }
 
   componentDidMount = async () => {
     const { userSession } = getConfig();
-    const file = await File.findById(this.props.id);
+    const user = userSession.loadUserData();
+    const file = await Item.findById(this.props.id);
     this.setState({
-      file: file,
-      userSession: userSession,
-      loadingFiles: false
+      file,
+      userSession,
+      loadingFiles: false,
+      username: user.username
     });
   }
 
@@ -29,10 +32,12 @@ export default class FileDetail extends Component {
     this.setState({ downloading: true });
 
     // Get the usersession and file model
-    const { file, userSession } = this.state;
+    const { file, userSession, username } = this.state;
 
     // Retrieve the file path and encryption key
-    const { key, path, name } = file.attrs;
+    const { path, name } = file.attrs;
+
+    const key = await userSession.decryptContent(file.attrs[username]);
 
     /** Convert key into valid jwk format */
     const validKey = await window.crypto.subtle.importKey(
@@ -56,7 +61,7 @@ export default class FileDetail extends Component {
     const iv = fileArray.slice(fileArray.length - 12);
 
     // Decrypt the file
-    const decryptedFile = await decrypt(fileContent, validKey, iv);
+    const decryptedFile = await decryptItem(fileContent, validKey, iv);
 
     // Download the file
     download(decryptedFile, name);
