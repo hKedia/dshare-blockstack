@@ -10,6 +10,10 @@ export default class File extends Model {
         uploadedBy: {
             type: String,
             decrypted: true
+        },
+        userGroupId: {
+            type: String,
+            decrypted: true
         }
     }
 

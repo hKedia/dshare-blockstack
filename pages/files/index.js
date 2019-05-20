@@ -14,6 +14,7 @@ export default class Index extends Component {
 
   async componentDidMount() {
     const uploadedFiles = await File.fetchOwnList();
+    console.log('uploadedFiles', uploadedFiles);
     this.setState({
       uploadedFiles: uploadedFiles,
       loadingFiles: false

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import Layout from '../../components/Layout';
 import { Segment, Header, Button, Form, Input } from 'semantic-ui-react';
-import { encrypt } from '../../utils/crypto';
 import { User, getConfig } from 'radiks';
 import Router from 'next/router';
-import File from '../../models/File';
+
+import Layout from '../../components/Layout';
+import { encrypt } from '../../utils/crypto';
+import FileModel from '../../models/File';
+import FileManager from '../../models/FileManager';
 
 const shortid = require('shortid');
 
@@ -67,13 +69,14 @@ export default class Upload extends Component {
 
         //upload to Gaia
         try {
-            await userSession.putFile(path, data_iv, { encrypt: false })
+            await userSession.putFile(path, data_iv, { encrypt: false });
+            console.log('File Uploaded');
         } catch (error) {
             console.error(error.message);
         }
 
         // Creating a new file model
-        const file = new File({
+        const file = new FileModel({
             name: fileName,
             path: path,
             key: JSON.stringify(keyData),
