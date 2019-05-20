@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { User, getConfig } from 'radiks';
+import { User, getConfig, GroupMembership } from 'radiks';
 import Router from 'next/router';
 import { Container, Segment, Header, Button } from 'semantic-ui-react';
 
@@ -12,12 +12,18 @@ class Home extends Component {
     const { userSession } = getConfig();
     if (userSession.isUserSignedIn()) {
       this.setState({ loading: true });
-      await User.createWithCurrentUser();
+      const user = await User.createWithCurrentUser();
+      await GroupMembership.cacheKeys();
+      await user.save();
+      console.log(user);
       Router.push('/files');
     } else if (userSession.isSignInPending()) {
       this.setState({ loading: true });
       await userSession.handlePendingSignIn();
-      await User.createWithCurrentUser();
+      const user = await User.createWithCurrentUser();
+      await GroupMembership.cacheKeys();
+      await user.save();
+      console.log(user);
       Router.push('/files');
     }
   }
