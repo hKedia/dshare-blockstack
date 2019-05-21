@@ -19,6 +19,10 @@ export default class Header extends Component {
             <a className="item">Home</a>
           </Link>
 
+          <Link href="/files/shared-files">
+            <a className="item">View Shared Files</a>
+          </Link>
+
           <Link href="/files/upload">
             <a className="item">Upload Files</a>
           </Link>
