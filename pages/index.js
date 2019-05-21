@@ -15,13 +15,12 @@ class Home extends Component {
       this.setState({ loading: true });
       const user = userSession.loadUserData();
       await this.savePublicKey(user, userSession);
-      Router.push('/files');
-    } else if (userSession.isSignInPending()) {
+    }
+    else if (userSession.isSignInPending()) {
       this.setState({ loading: true });
       const user = await userSession.handlePendingSignIn();
       await User.createWithCurrentUser();
       await this.savePublicKey(user, userSession)
-      Router.push('/files');
     }
   }
 
@@ -35,7 +34,8 @@ class Home extends Component {
         console.log(user);
         console.log('user exists. redirecting...')
       }
-    })
+    });
+    Router.push('/files');
   }
 
   login = () => {

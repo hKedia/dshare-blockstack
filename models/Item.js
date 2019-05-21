@@ -11,8 +11,19 @@ export default class Item extends Model {
         path: {
             type: String,
             decrypted: true
+        },
+        recipients: {
+            type: Array,
+            decrypted: true
+        },
+        owner: {
+            type: String,
+            decrypted: true
         }
+    }
 
+    static defaults = {
+        recipients: []
     }
 
     ago() {

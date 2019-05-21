@@ -13,7 +13,8 @@ export default class RenderFiles extends Component {
             <Link href={{
               pathname: "/files/view",
               query: {
-                id: _id
+                id: _id,
+                isShared: this.props.isShared
               }
             }}>
               <a>View File</a>

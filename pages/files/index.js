@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
+import { Grid, Loader } from 'semantic-ui-react';
+import { User } from 'radiks';
+
 import Layout from '../../components/Layout';
 import Item from '../../models/Item';
-import { Grid, Loader } from 'semantic-ui-react';
-import RenderUploadedFiles from '../../components/RenderUploadedFiles';
+import RenderFiles from '../../components/RenderFiles';
 import NoFilesFound from '../../components/NoFilesFound';
+
 export default class Index extends Component {
   state = {
     loadingFiles: true
   }
 
   static async getInitialProps() {
+    // get current user details
+    const user = User.currentUser();
+
+    // get a list of user created models
     const uploadedFiles = await Item.fetchOwnList();
-    const recipientFiles = [];
+
+    // retrieve all the file models 
+    const allFiles = await Item.fetchList();
+
+    // filter the array based on the current user
+    const recipientFiles = allFiles.filter(file => {
+      return file.attrs.recipients.includes(user._id);
+    });
+
     return { uploadedFiles, recipientFiles };
   }
 
@@ -19,6 +34,7 @@ export default class Index extends Component {
     this.setState({
       loadingFiles: false
     });
+    console.log('recipient files', this.props.recipientFiles);
   }
   render() {
     let { uploadedFiles, recipientFiles } = this.props;
@@ -26,13 +42,13 @@ export default class Index extends Component {
     if (uploadedFiles.length === 0) {
       uploadedFiles = <NoFilesFound />;
     } else {
-      uploadedFiles = <RenderUploadedFiles files={uploadedFiles} />
+      uploadedFiles = <RenderFiles files={uploadedFiles} isShared={0} />
     }
 
     if (recipientFiles.length === 0) {
       recipientFiles = <NoFilesFound />
     } else {
-      recipientFiles = <RenderSharedFiles files={recipientFiles} />
+      recipientFiles = <RenderFiles files={recipientFiles} isShared={1} />
     }
     return (
       <Layout>

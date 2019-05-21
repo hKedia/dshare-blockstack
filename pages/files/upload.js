@@ -87,6 +87,7 @@ export default class Upload extends Component {
         const file = new Item({
             name: fileName,
             path: path,
+            owner: username,
             [username]: encryptedKey
         })
 
