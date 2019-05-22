@@ -6,8 +6,10 @@ import Router from 'next/router';
 import Layout from '../../components/Layout';
 import { encryptItem } from '../../utils/crypto';
 import Item from '../../models/Item';
+import { toast } from 'react-toastify';
 
 const shortid = require('shortid');
+const bytes = require('bytes');
 
 export default class Upload extends Component {
   state = {
@@ -34,6 +36,11 @@ export default class Upload extends Component {
     event.stopPropagation();
     event.preventDefault();
     const file = event.target.files[0];
+    if (file.size >= bytes('25MB')) {
+      toast.error('File exceeds the 25MB limit.');
+      event.target.value = '';
+      return;
+    }
     this.setState({ fileName: file.name });
     let reader = new window.FileReader();
     reader.readAsArrayBuffer(file);

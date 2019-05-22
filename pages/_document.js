@@ -16,6 +16,7 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
           />
+          <link rel='stylesheet' href="/static/ReactToastify.css" />
           <script src="/static/nprogress.js" />
         </Head>
         <body className="custom_class">

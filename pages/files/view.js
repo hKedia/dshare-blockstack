@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
 import { getConfig } from 'radiks';
+import { toast } from 'react-toastify';
 
 import { decryptItem } from '../../utils/crypto';
 import { download } from '../../utils/file-utils';
@@ -87,7 +88,7 @@ export default class FileView extends Component {
     try {
       recipientPublicKey = await userSession.getFile(`keys/${recipient}`, { decrypt: false, username: recipient });
     } catch (error) {
-      console.log('Recipient key not found!');
+      toast.error('Recipient key not found. Ask the user to login atleast once');
       return;
     }
 
