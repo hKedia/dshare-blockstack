@@ -7,13 +7,13 @@
   "license": "MIT",
   "engines": {
     "node": "10.15.0",
-    "npm": "6.4.1"
+    "yarn": "1.16.0"
   },
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "yarn run build"
   },
   "dependencies": {
     "blockstack": "^19.1.0",

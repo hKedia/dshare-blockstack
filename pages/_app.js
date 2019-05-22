@@ -5,7 +5,7 @@ import { configure } from 'radiks';
 import Router from 'next/router';
 import { toast, Slide } from 'react-toastify';
 
-const appConfig = new AppConfig(['store_write', 'publish_data'], 'http://localhost:5000');
+const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
 const userSession = new UserSession({ appConfig });
 
 class MyApp extends App {
