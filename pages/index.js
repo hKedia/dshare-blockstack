@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { User, getConfig } from 'radiks';
 import Router from 'next/router';
-import { Container, Segment, Header, Button } from 'semantic-ui-react';
+import { Segment, Header, Button, Grid } from 'semantic-ui-react';
 import { getPublicKeyFromPrivate } from 'blockstack';
 
 class Home extends Component {
@@ -51,12 +51,16 @@ class Home extends Component {
 
   render() {
     return (
-      <Container textAlign="center">
-        <Segment placeholder padded loading={this.state.loading}>
-          <Header>Login with Blockstack to get started</Header>
-          <Button primary onClick={this.login}>Login</Button>
-        </Segment>
-      </Container>
+      <Grid container verticalAlign='middle' textAlign='center' style={{ height: "100vh" }}>
+        <Grid.Row>
+          <Grid.Column>
+            <Segment placeholder padded loading={this.state.loading}>
+              <Header>Login with Blockstack to get started</Header>
+              <Button basic color='purple' size='large' onClick={this.login}>Login</Button>
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }

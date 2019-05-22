@@ -30,7 +30,7 @@ export default class Header extends Component {
           <Menu.Item
             onClick={this.logout}
             position="right"
-            color={'red'}
+            color='red'
             content="Logout"
             link
           ></Menu.Item>

@@ -3,7 +3,14 @@ import { Table, Button } from 'semantic-ui-react';
 
 export default class StopSharing extends Component {
   state = {
-    loading: false
+    loading: false,
+    recipient: null,
+    file: null
+  }
+
+  stopSharing = async () => {
+    this.setState({ loading: true });
+    await this.props.stopSharing(this.props.recipient);
   }
 
   render() {
@@ -15,7 +22,8 @@ export default class StopSharing extends Component {
             loading={this.state.loading}
             basic
             color='red'
-            content='Stop Sharing'
+            icon="remove user"
+            onClick={this.stopSharing}
           ></Button>
         </Table.Cell>
       </Table.Row>

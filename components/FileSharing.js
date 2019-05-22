@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
 import { Table, Loader, Segment, Header, Form } from 'semantic-ui-react';
-import { getConfig } from 'radiks';
 
-import Item from '../models/Item';
 import StopSharing from '../components/StopSharing';
 
 export default class FileSharing extends Component {
   state = {
-    file: null,
-    userSession: null,
     loadingFiles: true,
-    username: null,
     recipient: '',
-    sharing: false
+    sharing: false,
+    recipientList: []
   }
 
   componentDidMount = async () => {
-    const { userSession } = getConfig();
-    const user = userSession.loadUserData();
-    const file = await Item.findById(this.props.id);
+    const { file } = this.props;
     this.setState({
-      file,
-      userSession,
       loadingFiles: false,
-      username: user.username,
+      recipientList: file.attrs.recipients
+    })
+  }
+
+  stopSharing = async (recipient) => {
+    await this.props.stopSharing(recipient);
+    const { file } = this.props;
+    this.setState({
       recipientList: file.attrs.recipients
     })
   }
@@ -31,63 +30,35 @@ export default class FileSharing extends Component {
   onSubmit = async event => {
     event.preventDefault();
 
-    const { userSession, recipient } = this.state;
-    console.log('recipient', recipient);
     this.setState({ sharing: true });
 
-    let recipientPublicKey;
-    try {
-      recipientPublicKey = await userSession.getFile(`keys/${recipient}`, { decrypt: false, username: recipient });
-      this.shareFile(recipientPublicKey);
-    } catch (error) {
-      console.error(error);
-      this.setState({ sharing: false, recipient: '' });
-      return;
-    }
-  }
-
-  shareFile = async recipientPublicKey => {
-    const { file, userSession, username, recipient } = this.state;
-
-    // get and decrypt the encryption key
-    const key = await userSession.decryptContent(file.attrs[username]);
-
-    // encrypt with recipient public key
-    const encryptedKey = await userSession.encryptContent(key, { publicKey: recipientPublicKey });
-
-    // update the recipient list
-    file.attrs.recipients.push(recipient);
-
-    // save the encrypted key to the model
-    file.update({
-      [recipient]: encryptedKey
-    });
-
-    // save the model
-    await file.save();
+    const { recipient } = this.state;
+    await this.props.shareFile(recipient);
 
     this.setState({ sharing: false, recipient: '' });
   }
 
   render() {
-    const { file, recipient, sharing, recipientList } = this.state;
+    const { recipient, sharing, recipientList } = this.state;
+    const { file } = this.props;
+
     let recipientListComponent = null;
 
-    if (file === null) {
+    if (file == null || recipientList === undefined) {
       return <Loader active={this.state.loadingFiles} inline="centered" />
     }
 
     if (recipientList.length > 0) {
       const cells = recipientList.map(r => {
         return (
-          <StopSharing key={r} recipient={r} file={file} />
+          <StopSharing key={r} recipient={r} file={file} stopSharing={this.stopSharing} />
         )
       });
       recipientListComponent = (
         <Table basic fixed>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="2">File Shared With</Table.HeaderCell>
+              <Table.HeaderCell colSpan="2">Shared With</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>{cells}</Table.Body>
@@ -105,17 +76,15 @@ export default class FileSharing extends Component {
               value={recipient}
               onChange={event => this.setState({ recipient: event.target.value })}
               required
-              width={14}
+              width={15}
             />
             <Form.Button
               icon='share'
               basic
-              color='teal'
+              color='purple'
               loading={sharing}
-              content='Share'
               type='submit'
-              width={2}
-              floated='right'
+              width={1}
               fluid
             ></Form.Button>
           </Form.Group>

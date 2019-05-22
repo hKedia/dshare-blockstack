@@ -6,6 +6,7 @@ export default class RenderFiles extends Component {
   render() {
     const items = this.props.files.map(file => {
       const { name, _id } = file.attrs;
+      const color = this.props.isShared ? 'purple' : 'teal';
       return {
         header: name,
         description: {
@@ -24,7 +25,7 @@ export default class RenderFiles extends Component {
         },
         meta: file.ago(),
         fluid: true,
-        color: 'teal',
+        color: color,
         key: _id
       };
     });
