@@ -134,7 +134,7 @@ export default class FileView extends Component {
     }
     return (
       <Layout>
-        <Grid>
+        <Grid padded='vertically'>
           <Grid.Row>
             <Grid.Column>
               <FileDetail file={this.props.file} />

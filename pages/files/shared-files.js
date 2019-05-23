@@ -10,7 +10,7 @@ import { Grid, Header } from "semantic-ui-react";
 export default () => {
   return (
     <Layout>
-      <Grid>
+      <Grid padded='vertically'>
         <Grid.Row>
           <Grid.Column>
             <Header>Files Shared with Others</Header>

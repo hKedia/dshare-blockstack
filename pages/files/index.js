@@ -52,7 +52,7 @@ export default class Index extends Component {
     }
     return (
       <Layout>
-        <Grid>
+        <Grid padded='vertically'>
           <Grid.Row>
             <Grid.Column width={8}>
               <h3>Files Uploaded by me</h3>

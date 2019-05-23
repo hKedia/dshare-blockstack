@@ -111,7 +111,7 @@ export default class Upload extends Component {
   render() {
     return (
       <Layout>
-        <Grid>
+        <Grid padded='vertically'>
           <Grid.Row>
             <Grid.Column>
               <Header>Upload File</Header>
