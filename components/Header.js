@@ -52,7 +52,7 @@ export default class Header extends Component {
           {menuComponent}
           <Menu.Menu position='right'>
             {userComponent}
-            <Menu.Item fitted='vertically'>
+            <Menu.Item>
               <Button negative size='small' onClick={this.logout}>Logout</Button>
             </Menu.Item>
           </Menu.Menu>

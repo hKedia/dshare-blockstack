@@ -70,11 +70,9 @@ export default class Upload extends Component {
 
     // encryption key in JSON
     const keyData = await window.crypto.subtle.exportKey("jwk", key);
-    console.log('keyData', keyData);
 
     // encryption key encrypted with user public key
     const encryptedKey = await userSession.encryptContent(JSON.stringify(keyData), { publicKey: publicKey });
-    console.log('encryptedKey', encryptedKey);
 
     // generating a random identifier for file path
     const identifier = shortid.generate();
@@ -85,7 +83,7 @@ export default class Upload extends Component {
     //upload to Gaia
     try {
       await userSession.putFile(path, data_iv, { encrypt: false });
-      console.log('File Uploaded');
+      console.log('File Uploaded...');
     } catch (error) {
       console.error(error.message);
     }
@@ -101,6 +99,7 @@ export default class Upload extends Component {
     // Saving the newly created file model to radiks
     try {
       await file.save();
+      console.log('File Model Created...');
       Router.push('/files')
     } catch (error) {
       console.error(error.message);
@@ -114,7 +113,7 @@ export default class Upload extends Component {
         <Grid padded='vertically'>
           <Grid.Row>
             <Grid.Column>
-              <Header>Upload File</Header>
+              <Header icon='cloud upload' size='medium' content='Upload File'></Header>
               <Form onSubmit={this.onSubmit}>
                 <Form.Group widths="equal">
                   <Form.Field>

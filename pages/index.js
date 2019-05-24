@@ -31,7 +31,6 @@ class Home extends Component {
         await userSession.putFile(`keys/${user.username}`, JSON.stringify(publicKey), { encrypt: false });
         console.log('new user saved');
       } else {
-        console.log(user);
         console.log('user exists. redirecting...')
       }
     });

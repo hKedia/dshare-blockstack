@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Loader } from 'semantic-ui-react';
+import { Grid, Loader, Header, Segment } from 'semantic-ui-react';
 import { User } from 'radiks';
 
 import Layout from '../../components/Layout';
@@ -27,41 +27,56 @@ export default class Index extends Component {
       return file.attrs.recipients.includes(user._id);
     });
 
-    return { uploadedFiles, recipientFiles };
+    return { uploadedFiles, recipientFiles, user };
   }
 
   async componentDidMount() {
     this.setState({
       loadingFiles: false
     });
-    console.log('recipient files', this.props.recipientFiles);
   }
   render() {
-    let { uploadedFiles, recipientFiles } = this.props;
-
+    const { uploadedFiles, recipientFiles, user } = this.props;
+    let uploadComponent, recipientComponent = null;
+    console.log('user', user);
     if (uploadedFiles.length === 0) {
-      uploadedFiles = <NoFilesFound />;
+      uploadComponent = <NoFilesFound />;
     } else {
-      uploadedFiles = <RenderFiles files={uploadedFiles} isShared={0} />
+      uploadComponent = <RenderFiles files={uploadedFiles} isShared={0} />
     }
 
     if (recipientFiles.length === 0) {
-      recipientFiles = <NoFilesFound />
+      recipientComponent = <NoFilesFound />
     } else {
-      recipientFiles = <RenderFiles files={recipientFiles} isShared={1} />
+      recipientComponent = <RenderFiles files={recipientFiles} isShared={1} />
+    }
+    if (user.attrs.username == null) {
+      return (
+        <Layout>
+          <Grid container verticalAlign='middle' textAlign='center' style={{ height: "100vh" }}>
+            <Grid.Row>
+              <Grid.Column>
+                <Segment padded>
+                  <Header>Create a username to use this application.</Header>
+                </Segment>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Layout>
+      )
     }
     return (
       <Layout>
         <Grid padded='vertically'>
           <Grid.Row>
             <Grid.Column width={8}>
-              <h3>Files Uploaded by me</h3>
-              {uploadedFiles}
+              <Header icon='cloud upload' size='medium' content='Uploaded By Me'></Header>
+              {uploadComponent}
               <Loader active={this.state.loadingFiles} inline="centered" />
             </Grid.Column>
             <Grid.Column width={8}>
-              <h3>Files Shared with me</h3>
-              {recipientFiles}
+              <Header icon='cloud download' size='medium' content='Shared With Me'></Header>
+              {recipientComponent}
               <Loader active={this.state.loadingFiles} inline="centered" />
             </Grid.Column>
           </Grid.Row>

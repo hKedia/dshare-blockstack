@@ -13,7 +13,7 @@ export default () => {
       <Grid padded='vertically'>
         <Grid.Row>
           <Grid.Column>
-            <Header>Files Shared with Others</Header>
+            <Header icon='share alternate' size='medium' content='Shared with Others'></Header>
             <SharedFileList />
           </Grid.Column>
         </Grid.Row>
