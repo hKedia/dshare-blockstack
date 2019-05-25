@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { Segment, Header, Button, Form, Input, Grid } from 'semantic-ui-react';
-import { getConfig } from 'radiks';
 import Router from 'next/router';
 
-import Layout from '../../components/Layout';
-import { encryptItem } from '../../utils/crypto';
-import Item from '../../models/Item';
+import { Header, Button, Form, Input, Grid } from 'semantic-ui-react';
+import { getConfig } from 'radiks';
 import { toast } from 'react-toastify';
+
+import { encryptItem } from '../../utils/crypto';
+
+import Layout from '../../components/Layout';
+import Item from '../../models/Item';
 
 const shortid = require('shortid');
 const bytes = require('bytes');
@@ -21,6 +23,9 @@ export default class Upload extends Component {
     username: null
   }
 
+  /**
+   * Load user data and get the corresponding public key
+   */
   async componentDidMount() {
     const { userSession } = getConfig();
     const user = userSession.loadUserData();
@@ -32,6 +37,9 @@ export default class Upload extends Component {
     });
   }
 
+  /**
+   * Reads the file
+   */
   captureFile = event => {
     event.stopPropagation();
     event.preventDefault();
@@ -49,11 +57,17 @@ export default class Upload extends Component {
     };
   }
 
+  /**
+   * Converts the read file to a buffer
+   */
   convertToBuffer = async reader => {
     const buffer = await Buffer.from(reader.result);
     this.setState({ buffer });
   };
 
+  /**
+   * Handles the logic for encrypting and uploading the file
+   */
   onSubmit = async event => {
     event.preventDefault();
 
@@ -80,7 +94,7 @@ export default class Upload extends Component {
     // contruct the file path
     const path = `files/${identifier}`;
 
-    //upload to Gaia
+    //upload to Gaia Hub
     try {
       await userSession.putFile(path, data_iv, { encrypt: false });
       console.log('File Uploaded...');
@@ -88,7 +102,7 @@ export default class Upload extends Component {
       console.error(error.message);
     }
 
-    // Creating a new file model
+    // Create a new file model
     const file = new Item({
       name: fileName,
       path: path,
@@ -96,7 +110,7 @@ export default class Upload extends Component {
       [username]: encryptedKey
     })
 
-    // Saving the newly created file model to radiks
+    // Save the newly created file model to radiks
     try {
       await file.save();
       console.log('File Model Created...');

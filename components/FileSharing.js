@@ -11,6 +11,9 @@ export default class FileSharing extends Component {
     recipientList: []
   }
 
+  /**
+   * When the component is loaded, it gets the recipients list for the selected file
+   */
   componentDidMount = async () => {
     const { file } = this.props;
     this.setState({
@@ -19,6 +22,10 @@ export default class FileSharing extends Component {
     })
   }
 
+  /**
+   * Calls stopSharing() in pages/view.js and later fetches the new recipients list.
+   * @param {String} recipient The blockstack username of recipient
+   */
   stopSharing = async (recipient) => {
     await this.props.stopSharing(recipient);
     const { file } = this.props;
@@ -27,6 +34,9 @@ export default class FileSharing extends Component {
     })
   }
 
+  /**
+   * Gets the recipient to share file with and calls shareFile() in pages/view.js
+   */
   onSubmit = async event => {
     event.preventDefault();
 
@@ -48,6 +58,7 @@ export default class FileSharing extends Component {
       return <Loader active={this.state.loadingFiles} inline="centered" />
     }
 
+    // If recipients exists, then render component which enables the functionality to remove a recipient
     if (recipientList.length > 0) {
       const cells = recipientList.map(r => {
         return (

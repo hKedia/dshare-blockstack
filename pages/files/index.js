@@ -35,21 +35,26 @@ export default class Index extends Component {
       loadingFiles: false
     });
   }
+
   render() {
     const { uploadedFiles, recipientFiles, user } = this.props;
     let uploadComponent, recipientComponent = null;
-    console.log('user', user);
+
+    // If uploaded files not empty then call RenderFiles component with uploaded files as props
     if (uploadedFiles.length === 0) {
       uploadComponent = <NoFilesFound />;
     } else {
       uploadComponent = <RenderFiles files={uploadedFiles} isShared={0} />
     }
 
+    // If there exists files shared with the user, the call RenderFiles component with files as props
     if (recipientFiles.length === 0) {
       recipientComponent = <NoFilesFound />
     } else {
       recipientComponent = <RenderFiles files={recipientFiles} isShared={1} />
     }
+
+    // If the user has not set a blockstack username
     if (user.attrs.username == null) {
       return (
         <Layout>
@@ -65,6 +70,7 @@ export default class Index extends Component {
         </Layout>
       )
     }
+
     return (
       <Layout>
         <Grid padded='vertically'>

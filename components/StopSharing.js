@@ -8,6 +8,9 @@ export default class StopSharing extends Component {
     file: null
   }
 
+  /**
+   * Calls the stopSharing() in FileSharing component which in turn calls the same function in pages/view.js
+   */
   stopSharing = async () => {
     this.setState({ loading: true });
     await this.props.stopSharing(this.props.recipient);

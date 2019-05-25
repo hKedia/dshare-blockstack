@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { User, getConfig } from 'radiks';
 import Router from 'next/router';
+
+import { User, getConfig } from 'radiks';
 import { Segment, Header, Button, Grid } from 'semantic-ui-react';
 import { getPublicKeyFromPrivate } from 'blockstack';
 
@@ -9,8 +10,14 @@ class Home extends Component {
     loading: false
   }
 
+  /**
+   * Get the userSession from radiks.
+   * Handle user signin.
+   * Call savePublicKey()
+   */
   async componentDidMount() {
     const { userSession } = getConfig();
+
     if (userSession.isUserSignedIn()) {
       this.setState({ loading: true });
       const user = userSession.loadUserData();
@@ -24,6 +31,11 @@ class Home extends Component {
     }
   }
 
+  /**
+   * Checks if user's public key is saved, if not, it generates the public key from user's app private key and saves it under keys/username
+   * @param {Object} user The user object for the current user
+   * @param {Object} userSession The blockstack user session
+   */
   async savePublicKey(user, userSession) {
     userSession.getFile(`keys/${user.username}`, { decrypt: false }).then(async (data) => {
       if (data === null) {
@@ -37,6 +49,11 @@ class Home extends Component {
     Router.push('/files');
   }
 
+  /**
+   * Gets called when cliks on Login
+   * Defines the scopes for connecting to Blockstack
+   * Calls redirectToSignin() from blockstack which initiates the sign in process
+   */
   login = () => {
     const scopes = [
       'store_write',
@@ -54,7 +71,7 @@ class Home extends Component {
         <Grid.Row>
           <Grid.Column>
             <Segment placeholder padded loading={this.state.loading}>
-              <Header>Login with Blockstack to get started</Header>
+              <Header>Login with Blockstack to continue</Header>
               <Button basic color='purple' size='large' onClick={this.login}>Login</Button>
             </Segment>
           </Grid.Column>

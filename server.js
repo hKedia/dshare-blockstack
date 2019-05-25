@@ -20,6 +20,7 @@ app.prepare().then(async () => {
   const RadiksController = await setup();
   server.use("/radiks", RadiksController);
 
+  // Setting up access control for interacting with Blockstack
   server.use((req, res, _next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");

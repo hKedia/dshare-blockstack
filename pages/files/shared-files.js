@@ -1,7 +1,9 @@
 import React from "react";
+
+import { Grid, Header } from "semantic-ui-react";
+
 import Layout from "../../components/Layout";
 import SharedFileList from "../../components/SharedFileList";
-import { Grid, Header } from "semantic-ui-react";
 
 /**
  * Describes the view to list shared files

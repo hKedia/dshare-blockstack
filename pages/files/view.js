@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Router from 'next/router';
+
 import { getConfig } from 'radiks';
 import { toast } from 'react-toastify';
+import { Grid } from 'semantic-ui-react';
 
 import { decryptItem } from '../../utils/crypto';
 import { download } from '../../utils/file-utils';
@@ -11,7 +13,6 @@ import FileDetail from '../../components/FileDetail';
 import FileSharing from '../../components/FileSharing';
 import FileActions from '../../components/FileActions';
 import Item from '../../models/Item';
-import { Grid } from 'semantic-ui-react';
 
 export default class FileView extends Component {
   state = {
@@ -20,6 +21,7 @@ export default class FileView extends Component {
   }
 
   static async getInitialProps({ query }) {
+    // Retrieve the file model based on the id
     const file = await Item.findById(query.id);
     const isShared = Number(query.isShared);
     return { isShared, file };
@@ -40,12 +42,13 @@ export default class FileView extends Component {
     const { userSession, username } = this.state;
     const { file } = this.props;
 
-    // Retrieve the file path and encryption key
+    // Retrieve the path, name and the owner of the file
     const { path, name, owner } = file.attrs;
 
+    // Retrieve and decrypt the file encryption key
     const key = await userSession.decryptContent(file.attrs[username]);
 
-    /** Convert key into valid jwk format */
+    // Convert key into valid jwk format
     const validKey = await window.crypto.subtle.importKey(
       "jwk",
       JSON.parse(key),
@@ -57,7 +60,7 @@ export default class FileView extends Component {
     // Retrieve the file Content as array buffer
     const fileBuffer = await userSession.getFile(path, { decrypt: false, username: owner });
 
-    // convert array buffer to a Uint8array
+    // convert array buffer to an Uint8array
     const fileArray = new Uint8Array(fileBuffer);
 
     // Retrieve the original file content
@@ -73,18 +76,27 @@ export default class FileView extends Component {
     download(decryptedFile, name);
   }
 
+  /**
+   * Destroys the corresponding file model
+   * [TODO] Also delete a file's content once blockstack implements it. 
+   */
   deleteFile = async () => {
     const { file } = this.props;
     await file.destroy();
     Router.push('/files');
   }
 
+  /**
+   * Handles the sharing of file with a blockstack user
+   * @param {String} recipient The blockstack username of recipient
+   */
   shareFile = async (recipient) => {
     const { userSession, username } = this.state;
     const { file } = this.props;
 
     let recipientPublicKey;
-    // check if recipient has logged in before
+
+    // check if recipient's public key exists
     try {
       recipientPublicKey = await userSession.getFile(`keys/${recipient}`, { decrypt: false, username: recipient });
     } catch (error) {
@@ -110,6 +122,10 @@ export default class FileView extends Component {
     await file.save();
   }
 
+  /**
+   * Stop file sharing
+   * @param {String} recipient The blockstack username of recipient
+   */
   stopSharing = async (recipient) => {
     const { file } = this.props;
 
@@ -118,20 +134,23 @@ export default class FileView extends Component {
       return r !== recipient;
     });
 
-    // set the value for key with recipient username is null
+    // set the value for key with recipient username as null
     file.update({
       recipients: updatedRecipients,
       [recipient]: null
     });
 
+    // save the model
     await file.save();
   }
 
   render() {
     let fileSharingComponent = null;
+
     if (!this.props.isShared) {
       fileSharingComponent = <FileSharing file={this.props.file} shareFile={this.shareFile} stopSharing={this.stopSharing} />;
     }
+
     return (
       <Layout>
         <Grid padded='vertically'>

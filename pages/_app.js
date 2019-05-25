@@ -1,11 +1,15 @@
 import App, { Container } from 'next/app';
 import React from 'react';
+import Router from 'next/router';
+
 import { UserSession, AppConfig } from 'blockstack';
 import { configure } from 'radiks';
-import Router from 'next/router';
 import { toast, Slide } from 'react-toastify';
 
+// Config for radiks
 const appConfig = new AppConfig(['store_write', 'publish_data'], process.env.RADIKS_API_SERVER);
+
+// Current blockstack user session
 const userSession = new UserSession({ appConfig });
 
 class MyApp extends App {

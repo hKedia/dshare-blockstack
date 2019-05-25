@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card } from 'semantic-ui-react';
 import Link from 'next/link';
+
+import { Card } from 'semantic-ui-react';
 
 export default class RenderFiles extends Component {
   render() {
@@ -18,7 +19,7 @@ export default class RenderFiles extends Component {
                 isShared: this.props.isShared
               }
             }}>
-              <a>View File</a>
+              <a>More</a>
             </Link>
           ),
           textAlign: 'right'

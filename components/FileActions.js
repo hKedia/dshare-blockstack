@@ -7,12 +7,18 @@ export default class FileActions extends Component {
     deleting: false
   }
 
+  /**
+   * Calls the downloadFile() in pages/view.js
+   */
   download = async () => {
     this.setState({ downloading: true });
     await this.props.download();
     this.setState({ downloading: false });
   }
 
+  /**
+   * Calls the deleteFile() in pages/view.js
+   */
   delete = async () => {
     this.setState({ deleting: true });
     await this.props.delete();

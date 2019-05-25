@@ -1,6 +1,9 @@
 import { Model } from 'radiks';
 import moment from 'moment';
 
+/**
+ * The Radiks model which stores necessary data for a file
+ */
 export default class Item extends Model {
     static className = 'Item';
     static schema = {

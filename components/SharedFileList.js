@@ -13,6 +13,8 @@ export default class SharedFileList extends Component {
 
   async componentDidMount() {
     const myFiles = await Item.fetchOwnList();
+
+    // Retrive those file models where recipients is not empty
     const sharedFiles = myFiles.filter(file => {
       return file.attrs.recipients.length > 0;
     });
@@ -24,6 +26,7 @@ export default class SharedFileList extends Component {
 
   render() {
     let sharedFilesComponent;
+
     if (this.state.sharedFiles.length === 0) {
       sharedFilesComponent = <NoFilesFound />
     } else {

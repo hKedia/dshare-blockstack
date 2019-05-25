@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Menu, Container, Label, Button } from 'semantic-ui-react';
 import Link from 'next/link';
 import Router from 'next/router';
+
+import { Menu, Container, Label, Button } from 'semantic-ui-react';
 import { getConfig } from 'radiks';
 
 export default class Header extends Component {
@@ -15,6 +16,9 @@ export default class Header extends Component {
     this.setState({ username: user.username });
   }
 
+  /**
+   * Handles signout by calling signUserOut() from blockstack user session object
+   */
   logout = () => {
     const { userSession } = getConfig();
     userSession.signUserOut();
@@ -22,8 +26,9 @@ export default class Header extends Component {
   }
 
   render() {
-    let menuComponent = null;
-    let userComponent = null;
+    let menuComponent, userComponent = null;
+
+    // Hide the navigation menu, if no blockstack username is set for the logged in user
     if (this.state.username != null) {
       menuComponent = (
         <Menu.Menu position='left'>
