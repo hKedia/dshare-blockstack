@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Router from 'next/router';
+
 import { Grid, Loader, Header, Segment } from 'semantic-ui-react';
 import { User } from 'radiks';
 
@@ -30,10 +32,19 @@ export default class Index extends Component {
     return { uploadedFiles, recipientFiles, user };
   }
 
+  streamCallback = (item) => {
+    Router.push('/files');
+  }
+
   async componentDidMount() {
     this.setState({
       loadingFiles: false
     });
+    Item.addStreamListener(this.streamCallback);
+  }
+
+  componentWillUnmount() {
+    Item.removeStreamListener(this.streamCallback);
   }
 
   render() {
