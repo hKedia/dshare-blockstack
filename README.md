@@ -11,6 +11,7 @@ To use this project, you'll need to install few things first.
 You need to have MongoDB running locally on your machine. Community edition of MongoDB can be downloaded from [here](https://docs.mongodb.com/manual/installation/#mongodb-community-edition).
 
 If you have MongoDB already installed, make sure it's version 3.6 or higher.
+Here's MongoDB is used to run a [radiks](https://github.com/blockstack-radiks/radiks) server, which helps in quering and indexing the data stored on user's gaia hub. Curious about how radiks work? [GitHub](https://github.com/blockstack-radiks/radiks)
 
 ### Installing Node.js
 
