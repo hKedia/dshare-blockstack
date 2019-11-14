@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Router from 'next/router';
 
 import { User, getConfig } from 'radiks';
-import { Segment, Header, Button, Grid } from 'semantic-ui-react';
+import { Segment, Header, Button, Grid, Icon, Image } from 'semantic-ui-react';
 import { getPublicKeyFromPrivate } from 'blockstack';
 
 class Home extends Component {
@@ -67,15 +67,93 @@ class Home extends Component {
 
   render() {
     return (
-      <Grid container verticalAlign='middle' textAlign='center' style={{ height: "100vh" }}>
-        <Grid.Row>
-          <Grid.Column>
-            <Segment placeholder padded loading={this.state.loading}>
-              <Header>Login with Blockstack to continue</Header>
-              <Button basic color='purple' size='large' onClick={this.login}>Login</Button>
+      // <Grid container verticalAlign='middle' textAlign='center' style={{ height: "100vh" }}>
+      //   <Grid.Row>
+      //     <Grid.Column>
+      //       <Segment placeholder padded loading={this.state.loading}>
+      //         <Header>Login with Blockstack to continue</Header>
+      //         <Button basic color='purple' size='large' onClick={this.login}>Login</Button>
+      //       </Segment>
+      //     </Grid.Column>
+      //   </Grid.Row>
+      // </Grid>
+
+      <Grid container style={{ marginTop: "0" }}>
+        <Grid.Row verticalAlign="middle">
+          <Grid.Column width={8}>
+            <Segment textAlign="center">
+              <Header as="h4">Welcome to dShare - Blockstack</Header>
             </Segment>
           </Grid.Column>
+          <Grid.Column width={5}>
+            <Button basic fluid size="big" color="purple" onClick={this.login} loading={this.state.loading}>
+              <Icon name="sign-in" />
+              <span>Login with Blockstack</span>
+            </Button>
+          </Grid.Column>
+          <Grid.Column width={3}>
+            <a href="https://github.com/hKedia/dShare-blockstack">
+              <Button basic fluid size="big" color="black">
+                <Icon name="github" /> Github</Button>
+            </a>
+          </Grid.Column>
         </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column>
+            <Segment.Group>
+              <Segment textAlign="center" size="big">
+                <p>App Architecture</p>
+              </Segment>
+              <Segment>
+                <Image src="/static/architecture.png" centered />
+              </Segment>
+            </Segment.Group>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column>
+            <Segment.Group>
+              <Segment textAlign="center" size="big">
+                <p>File Upload</p>
+              </Segment>
+              <Segment>
+                <Image src="/static/upload.png" centered />
+              </Segment>
+            </Segment.Group>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column>
+            <Segment.Group>
+              <Segment textAlign="center" size="big">
+                <p>File Sharing</p>
+              </Segment>
+              <Segment>
+                <Image src="/static/share.png" centered />
+              </Segment>
+            </Segment.Group>
+          </Grid.Column>
+        </Grid.Row>
+
+        {/* <Grid.Row>
+          <Grid.Column>
+            <Segment.Group>
+              <Segment textAlign="center" size="big">
+                <p>Using the Application</p>
+              </Segment>
+              <Segment>
+                <Image src="/static/connect-to-metamask.png" centered />
+              </Segment>
+
+              <Segment>
+                <Image src="/static/app-login-prompt.png" centered />
+              </Segment>
+            </Segment.Group>
+          </Grid.Column>
+        </Grid.Row> */}
       </Grid>
     )
   }
