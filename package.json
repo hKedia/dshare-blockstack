@@ -23,7 +23,7 @@
     "express-ws": "^4.0.0",
     "file-saver": "^2.0.1",
     "moment": "^2.24.0",
-    "next": "^8.1.0",
+    "next": "^9.3.2",
     "radiks": "^0.2.0",
     "radiks-server": "^0.1.11",
     "react": "^16.8.6",
